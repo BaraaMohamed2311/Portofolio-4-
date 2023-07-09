@@ -20,6 +20,13 @@ let current = 0;
 
 let color_btn = document.querySelector(".color-box");
 
+/********************Colors**************************/
+let saved_color =JSON.parse(localStorage.getItem("color")) ;
+
+if(saved_color){
+  document.body.classList.add(`${saved_color}`);
+}
+
 color_btn.addEventListener("click", function () {
   color_btn.innerHTML = `
   <div class="red color" data-color="red"></div>
@@ -45,7 +52,7 @@ function setColor(colors) {
       for (let i = 0; i < colors.length; i++) {
         document.body.classList.remove(colors[i].getAttribute("data-color"));
       }
-
+      localStorage.color = JSON.stringify(color.getAttribute("data-color"));
       document.body.classList.add(color.getAttribute("data-color"));
       color_btn.innerHTML = `
       <ion-icon name="color-fill"></ion-icon>
