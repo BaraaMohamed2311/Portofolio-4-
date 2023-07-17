@@ -1,5 +1,7 @@
 import { skills, projects } from "./data.js";
 
+
+
 const nav_el = document.querySelector(".nav-el");
 let nav_arrow = document.querySelector(".arrow");
 let nav_mood = "closed";
@@ -268,28 +270,49 @@ function skillsAnimation() {
 skillsDom();
 
 /*******************************Slider*********************************************/
-let start;
-let clicked = false;
-let prevScrollLeft;
-function startDetecting(e) {
-  start = e.clientX;
-  clicked = true;
-  prevScrollLeft = proj_wrapper.scrollLeft;
+let prevP , prevScrollLeft ;
+let started = false;
+function start(e) {
+  if(window.innerWidth >1000){
+    started = true;
+    prevP = e.clientX;
+    prevScrollLeft = proj_wrapper.scrollLeft;
+    }
+    else{
+        started = true;
+    prevP = e.touches[0].clientX;
+    prevScrollLeft = proj_wrapper.scrollLeft;
+    }
 }
 
-function detectingposition(e) {
-  if (!clicked) return;
-  e.preventDefault();
-  let scrolling_depth = e.clientX - start;
-  proj_wrapper.scrollLeft = prevScrollLeft - scrolling_depth;
+function dragging(e) {
+  if(window.innerWidth >1000){
+
+    if(!started) return;
+    let scroll_amount = e.clientX - prevP;
+    proj_wrapper.scrollLeft = prevScrollLeft - scroll_amount;
+    }
+    else{
+        if (!started) return;
+    let scroll_amount = e.touches[0].clientX - prevP;
+    proj_wrapper.scrollLeft = prevScrollLeft - scroll_amount;
+    
+    }
 }
 
-function endDetecting() {
-  clicked = false;
+function end() {
+  started = false;
 }
 
-proj_wrapper.addEventListener("mousedown", startDetecting);
+proj_wrapper.addEventListener("mousedown", start);
 
-proj_wrapper.addEventListener("mousemove", detectingposition);
+proj_wrapper.addEventListener("mousemove", dragging);
 
-proj_wrapper.addEventListener("mouseup", endDetecting);
+proj_wrapper.addEventListener("mouseup", end);
+
+
+proj_wrapper.addEventListener('touchstart',start);
+
+proj_wrapper.addEventListener('touchmove',dragging);
+    
+proj_wrapper.addEventListener('touchend',end);
